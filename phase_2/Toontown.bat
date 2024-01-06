@@ -1,19 +1,13 @@
 @echo off
+title Toontown BR - AI (District) Server
+cd..
 
-taskkill /f /im astrond.exe
-taskkill /f /im ppython.exe
-taskkill /f /fi "windowtitle eq Toontown_BR - UberDOG Server"
-taskkill /f /fi "windowtitle eq Toontown_BR - Astron Server"
-taskkill /f /fi "windowtitle eq Toontown_BR - AI (District) Server"
-taskkill /f /fi "windowtitle eq Toontown_BR - Game Client"
+rem Read the contents of PPYTHON_PATH into %PPYTHON_PATH%:
+set /P PPYTHON_PATH=<PPYTHON_PATH
 
-start start_astron_server.bat
-
-ping 127.0.0.1 -n 1 > nul
-start start_uberdog_server.bat
-
-ping 127.0.0.1 -n 1 > nul
-start start_ai_server.bat
-
-ping 127.0.0.1 -n 3 > nul
-start toontownlauncher.bat
+:main
+%PPYTHON_PATH% -m toontown.ai.AIStart --base-channel 401000000 ^
+               --max-channels 999999 --stateserver 4002 ^
+               --astron-ip 127.0.0.1:7199 --eventlogger-ip 127.0.0.1:7197 ^
+               --district-name "Toon Valley"
+goto main
