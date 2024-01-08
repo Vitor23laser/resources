@@ -1,170 +1,99 @@
-# This file will be installed on the client as
-# $PANDA3D_ROOT/Config.pre.  It specifies most of the runtime config
-# variables appropriate to run Toontown on the client machine (a few
-# more platform-specific settings may be added explicitly within
-# toontown.pdef).
-
-# You may edit this file to add any runtime settings needed for
-# Toontown game clients.
-
-load-display pandadx9
-aux-display pandadx9
-aux-display pandadx8
-aux-display pandagl
-aux-display tinydisplay
-
-cull-bin gui-popup 60 unsorted
-want-render2dp 1
-text-encoding utf8
-direct-wtext 0
-text-never-break-before ,
-ime-aware 1
-ime-hide 1
-textures-power-2 down
-paranoid-clock 1
-lock-to-one-cpu 1
-collect-tcp 1
-collect-tcp-interval 0.2
-server-version sv1.4.33.0
-server-version-suffix 
-cull-bin shadow 15 fixed
-cull-bin ground 14 fixed 
-dc-file phase_3/etc/ttbr.dc
-plugin-path .
+# Window Settings
 window-title Toontown
-verify-ssl 0
-ssl-cipher-list RC4-MD5 http-preapproved-server-certificate-filename ttown4.online.disney.com:46667 phase_3/etc/gameserver.txt
-chan-config-sanity-check #f
-require-window 0
-language portuguese
 icon-filename phase_2/toontown.ico
+cursor-filename resources/toonmono.cur
 
-# DirectX 9: DirectX will manage textures, but not vertex and index buffers
-dx-management 1
+# Audio/Video
+audio-library-name miles_audio
+load-display pandagl
+aux-display pandagl
+aux-display pandadx9
+aux-display tinydisplay
+depth-bits 24
+audio-sfx-active #t
+audio-music-active #t
+aspect-ratio 1.333333
 
+# Models/Resources
+model-path resources
+default-model-extension .bam
+vfs-case-sensitive 0
+
+# Server Settings
+server-version sv1.4.40.32
+server-failover 80 443
 tt-specific-login 1
+# If true, individual TCP packets are not sent immediately, but rather they are collected together and accumulated to be sent periodically as one larger TCP packet.  This cuts down on overhead from the TCP/IP protocol, especially if many small packets need to be sent on the same connection, but it introduces additional latency (since packets must be held before they can be sent).
+collect-tcp 1
 
-# downloader settings
-decompressor-buffer-size 32768
-extractor-buffer-size 32768
-patcher-buffer-size 512000
-downloader-timeout 15
+# DC Files
+dc-file etc/toon.dc
+dc-file etc/otp.dc
+
+# HTTP/Downloading
+verify-ssl 0
 downloader-timeout-retries 4
-downloader-disk-write-frequency 4
 downloader-byte-rate 125000
 downloader-frequency 0.1
-
-# Display settings
-
-load-display pandadx9
-aux-display pandadx9
-aux-display pandadx8
-aux-display pandagl
-aux-display tinydisplay
-win-size 800 600
-fullscreen #t
-
-# loader settings
-load-file-type toontown
-compress-channels #t
-display-lists 0
-
+http-connect-timeout 20
+http-timeout 30
+extra-ssl-handshake-time 20.0
+# Compute the SSL random seed early on.
 early-random-seed 1
-ssl-cipher-list RC4-MD5
-respect-prev-transform 1
 
-# notify settings
+# Notify Settings
 notify-level-collide warning
 notify-level-chan warning
 notify-level-gobj warning
 notify-level-loader warning
 notify-timestamp #t
+notify-integrate #f
+default-directnotify-level info
+console-output 1
 
-default-model-extension .bam
-
-decompressor-step-time 0.5
-extractor-step-time 0.5
-
-# Server version
-required-login playToken
-server-failover 80 443
-want-fog #t
-dx-use-rangebased-fog #t
-aspect-ratio 1.333333
-on-screen-debug-font ImpressBT.ttf
-temp-hpr-fix 1
-vertex-buffers 0
+# Panda3D/DirectX
+# Configure this true if you have a buggy graphics driver that doesn't correctly implement the third parameter, NumVertices, of DrawIndexedPrimitive().  In particular, the NVIDIA Quadro driver version 6.14.10.7184 seems to treat this as a maximum vertex index, rather than a delta between the maximum and minimum vertex index.  Turn this on if you are seeing stray triangles, or you are not seeing all of your triangles.  Enabling this should work around this bug, at the cost of some additional rendering overhead on the GPU. 
 dx-broken-max-index 1
-vfs-case-sensitive 0
+# Set this true to show ime texts on the chat panel and hide the IME default windows. This is a mechanism to work around DX8/9 interface.
+ime-aware 1
+# Set this true to hide ime windows.
+ime-hide 1
+# Use DirectX management of video memory
+dx-management 1
+# If this is true, more accurate but more expensive fog computations are performed.
+dx-use-rangebased-fog #t
+# Set this true to have all CollisionTraversers in the world respect the previous frame's transform (position) for a given object when determining motion for collision tests.
+respect-prev-transform 1
+# Specifies the maximum amount of time that should be consumed by a single call to Decompressor::run().
+decompressor-step-time 0.5
+# Specifies the maximum amount of time that should be consumed by a single call to Extractor::step().
+extractor-step-time 0.5
+# Fix for Panda3D 1.0.0
+temp-hpr-fix 1
+# Set this true to allow the use of vertex buffers (or buffer objects, as OpenGL dubs them) for rendering vertex data.
+vertex-buffers 0
+
+# GUI Settings
+direct-wtext 0
+on-screen-debug-font ImpressBT.ttf
+
+# Misc Settings
 inactivity-timeout 180
-
-# This keeps the joint hierarchies for the different LOD's of an Actor
-# separate.  Seems to be necessary for the Toons--some of the naked
-# Toons seem to have slightly different skeletons for the different
-# LOD's.
+# If require-window is true, it means that we should raise an exception if the window fails to open correctly.
+require-window 0
+# Limits the size of the buffer used.
+patcher-buffer-size 512000
+# required-login: auto, green, blue, playToken, DISLToken, gameServer.
+required-login playToken
+# Do we merge or isolate LOD's?
 merge-lod-bundles 0
-
-# Need to turn on this option to support our broken door triggers.
 early-event-sphere 1
-
-# Need to turn this on to avoid jerky movement, pirates copes with it differently
+# This controls the default value of SmoothMover::get_accept_clock_skew().
 accept-clock-skew 1
+text-minfilter linear_mipmap_linear
+gc-save-all 0
+server-data-folder log/
 
-# Keep the frame rate from going too ridiculously high.  This is
-# mainly an issue when the video driver doesn't support video sync.
-# Limiting the frame rate helps out some of the collision issues
-# that you get with a too-high frame rate (some of our trigger
-# planes require a certain amount of interpenetration to be
-# triggered), and is also just a polite thing to do in general.
-clock-mode limited
-clock-frame-rate 120
-
-# Not using parasite_buffer to speed things up in places where
-# creating this buffer seems to cause frame rate issues such
-# as the Photo Fun game.
-prefer-parasite-buffer 0
-
-# This is client side IGN
-# news-over-http 0
-news-base-dir phase_3.5/models/news/
-news-index-filename news_index.txt
-
-# This is IGN over HTTP, going LIVE 6/2/2010 - dlo
-news-over-http 1
-news-base-dir /httpNews
-news-index-filename http_news_index.txt
-
-# This is now on by default.  Will be removed in next publish - dlo 05/24/2010
-# want-new-toonhall 1
-
-audio-library-name miles_audio
-
-cursor-filename $PANDA3D_ROOT/toonmono.cur
-
-#
-# audio related options
-#
-
-# load the loaders
-audio-loader mp3
-audio-loader midi
-audio-loader wav
-audio-software-midi #t
-
-# turn sfx on
-audio-sfx-active #t
-# turn music on
-audio-music-active #t
-
-audio-master-sfx-volume 1
-audio-master-music-volume 1
-
-#
-# display resolution
-#
-
-#
-# server type
-#
-
-server-type prod
+# TEMPORARY
+skip-friend-quest true
+skip-phone-quest true
