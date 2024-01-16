@@ -20,15 +20,15 @@ default-model-extension .bam
 vfs-case-sensitive 0
 
 # Server Settings
-server-version sv1.4.40.32
+server-version sv1.4.40.7
 server-failover 80 443
 tt-specific-login 1
 # If true, individual TCP packets are not sent immediately, but rather they are collected together and accumulated to be sent periodically as one larger TCP packet.  This cuts down on overhead from the TCP/IP protocol, especially if many small packets need to be sent on the same connection, but it introduces additional latency (since packets must be held before they can be sent).
 collect-tcp 1
 
 # DC Files
-dc-file etc/toon.dc
-dc-file etc/otp.dc
+dc-file phase_3/etc/toon.dc
+dc-file phase_3/etc/otp.dc
 
 # HTTP/Downloading
 verify-ssl 0
@@ -95,5 +95,5 @@ gc-save-all 0
 server-data-folder log/
 
 # TEMPORARY
-skip-friend-quest true
-skip-phone-quest true
+skip-friend-quest false
+skip-phone-quest false
